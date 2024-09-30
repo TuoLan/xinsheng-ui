@@ -1,6 +1,7 @@
 import { BASE_URL, TIMEOUT } from './env';
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosRequestConfig } from 'axios';
 import { message } from 'antd';
+import { set } from "lodash";
 
 // 定义响应数据的通用结构
 // interface ApiResponse<T> {
@@ -8,6 +9,9 @@ import { message } from 'antd';
 //   msg: string;
 //   data: T;
 // }
+
+
+set(axios.defaults.headers, "Content-Type", "application/json;charset=utf-8");
 
 // 创建 axios 实例
 const service: AxiosInstance = axios.create({
@@ -43,6 +47,10 @@ service.interceptors.response.use(
     return res;
   },
   (error: any) => {
+    if (error.status === 401) {
+      window.location.href = '/login'; // 重定向到登录页面
+      return Promise.reject(new Error(error.response.data.msg || 'Error'));
+    }
     // 处理响应错误
     console.error('Response error:', error);
     return Promise.reject(error);

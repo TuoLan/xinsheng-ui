@@ -1,8 +1,8 @@
-import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
 import styles from "./index.module.scss"
 import { useNavigate } from 'react-router-dom';
+import service from "../../request"
 
 type FieldType = {
   username?: string;
@@ -14,7 +14,10 @@ function Login() {
   const navigate = useNavigate()
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values);
-    navigate('/home')
+    service.POST('/api/login', values).then((res) => {
+      localStorage.setItem("token", res.data);
+      navigate('/home')
+    })
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {

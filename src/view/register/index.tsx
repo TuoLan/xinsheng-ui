@@ -1,4 +1,3 @@
-import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
 import styles from "./index.module.scss"
