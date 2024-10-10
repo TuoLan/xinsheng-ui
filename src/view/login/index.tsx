@@ -3,6 +3,8 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import styles from "./index.module.scss"
 import { useNavigate } from 'react-router-dom';
 import service from "../../request"
+import { useAppDispatch } from '../../store/hooks';
+import { setUserInfo, UserInfoModel } from '../../store/reducers/userReducer';
 
 type FieldType = {
   username?: string;
@@ -12,11 +14,23 @@ type FieldType = {
 
 function Login() {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch();
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
     service.POST('/api/login', values).then((res) => {
       localStorage.setItem("token", res.data);
-      navigate('/home')
+      service.GET('/api/userInfo').then((res: { code: string; msg: string; data: UserInfoModel }) => {
+        const datas = {
+          ...res.data,
+          address: res.data.address || {
+            province: "湖北省",
+            city: "孝感市",
+            area: "大悟县",
+            detail: ""
+          }
+        }
+        dispatch(setUserInfo(datas));
+        navigate('/index')
+      })
     })
   };
 
@@ -25,7 +39,11 @@ function Login() {
   };
   return (
     <div className={styles.login}>
+      <div className={styles.header}>
+        <div className={styles.title}>鑫盛冷饮</div>
+      </div>
       <Form
+        className={styles.basicForm}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}

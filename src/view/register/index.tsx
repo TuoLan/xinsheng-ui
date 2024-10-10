@@ -12,9 +12,7 @@ type FieldType = {
 function Register() {
   const navigate = useNavigate()
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-    service.POST('/api/register', values).then((res) => {
-      console.log(res);
+    service.POST('/api/register', values).then(() => {
       navigate('/login')
     })
   };
@@ -24,7 +22,11 @@ function Register() {
   };
   return (
     <div className={styles.register}>
+      <div className={styles.header}>
+        <div className={styles.title}>鑫盛冷饮</div>
+      </div>
       <Form
+        className={styles.basicForm}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
@@ -51,6 +53,7 @@ function Register() {
         </Form.Item>
 
         <Form.Item>
+          <span className={styles.goLogin} onClick={() => navigate(-1)} >已注册去登陆</span>
           <Button htmlType="submit">
             注册
           </Button>

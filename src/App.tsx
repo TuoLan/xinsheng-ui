@@ -8,8 +8,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="/home/*" element={<Home />} /> {/* 这里使用通配符 */}
+        <Route path="/" element={<Navigate to="/index" replace />} />
+        <Route path="/index/*" element={<Home />} /> {/* 这里使用通配符 */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>

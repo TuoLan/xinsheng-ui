@@ -1,3 +1,12 @@
 .mine {
   display: flex;
+  background-color: #fff;
+  margin: 12px;
+  padding: 12px;
+  height: calc(100% - 170px);
+  overflow-y: auto;
+  border-radius: 4px;
+  .btn {
+    margin: 8px 0;
+  }
 }

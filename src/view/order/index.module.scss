@@ -1,3 +1,43 @@
 .order {
-  display: flex;
+  .ops {
+    margin-top: 8px;
+    background-color: #fff;
+    position: relative;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+    .orderTabs {
+      width: 100%;
+    }
+    .add {
+      margin-left: 8px;
+    }
+  }
+  .orderLayout {
+    padding: 12px;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  .orderItem {
+    padding: 12px;
+    background-color: #fff;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    position: relative;
+  }
+  .status {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-weight: 600;
+
+  }
+  .ordered {
+    color: #1677ff;
+  }
+  .completed {
+    color: #52c41a;
+  }
 }
