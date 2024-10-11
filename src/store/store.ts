@@ -16,6 +16,10 @@ const store = configureStore({
   reducer: {
     user: persistedUserReducer,
   },
+  middleware: getDefaultMiddleware => getDefaultMiddleware({
+    //关闭redux序列化检测
+    serializableCheck: false
+  })
 });
 
 export const persistor = persistStore(store); // 创建 persistor

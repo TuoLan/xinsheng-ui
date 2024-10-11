@@ -27,7 +27,7 @@ type ResModel = {
 const statusMap = {
   all: "全部",
   ordered: "已下单",
-  received: "已发货",
+  received: "已接单",
   closed: "已关闭",
   completed: "已完成"
 }

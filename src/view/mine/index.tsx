@@ -5,8 +5,6 @@ import service from "../../request"
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { setUserInfo, UserInfoModel } from '../../store/reducers/userReducer';
 
-const { Panel } = Collapse;
-
 function Mine() {
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((state) => state.user.userInfo) as UserInfoModel
@@ -18,10 +16,33 @@ function Mine() {
     }).then((res) => {
       message.success(res.msg)
       setIsEdit(false)
-      dispatch(setUserInfo(datas));
+      dispatch(setUserInfo(res.data));
     })
   }
   const onFinishFailed = () => { }
+
+  const items = [
+    {
+      key: '1',
+      label: '收货地址',
+      children: (
+        <>
+          <Form.Item label="省" name={['address', 'province']}>
+            <Input disabled />
+          </Form.Item>
+          <Form.Item label="市" name={['address', 'city']}>
+            <Input disabled />
+          </Form.Item>
+          <Form.Item label="区/县" name={['address', 'area']}>
+            <Input disabled />
+          </Form.Item>
+          <Form.Item label="详细地址" name={['address', 'detail']}>
+            <Input disabled={!isEdit} />
+          </Form.Item>
+        </>
+      ),
+    }
+  ]
 
   useEffect(() => {
     setSaveData(userInfo)
@@ -63,22 +84,7 @@ function Mine() {
             <Input placeholder='请输入手机号' disabled={!isEdit} />
           </Form.Item>
 
-          <Collapse defaultActiveKey={['1']}>
-            <Panel header="收货地址" key="1">
-              <Form.Item label="省" name={['address', 'province']}>
-                <Input disabled />
-              </Form.Item>
-              <Form.Item label="市" name={['address', 'city']}>
-                <Input disabled />
-              </Form.Item>
-              <Form.Item label="区/县" name={['address', 'area']}>
-                <Input disabled />
-              </Form.Item>
-              <Form.Item label="详细地址" name={['address', 'detail']}>
-                <Input disabled={!isEdit} />
-              </Form.Item>
-            </Panel>
-          </Collapse>
+          <Collapse key={isEdit + ''} defaultActiveKey={isEdit ? ['1'] : []} items={items} />
 
           <Form.Item>
             {

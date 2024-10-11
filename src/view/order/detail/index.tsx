@@ -1,34 +1,18 @@
 import styles from "./index.module.scss"
-import { Button, Form, InputNumber, Select, TimePicker, message } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
+import { Button, Form, InputNumber, Select, message } from 'antd';
+import dayjs from 'dayjs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import service from "../../../request"
 import { LeftOutlined } from '@ant-design/icons';
-
-type AddressModel = {
-  province: string;
-  city: string;
-  area: string;
-  detail: string
-}
-
-type UserInfoModel = {
-  _id: string;
-  userType: "person" | "merchant" | "admin";
-  username: string;
-  password: string;
-  createTime: string;
-  nickname: string;
-  phoneNumber: string;
-  address: AddressModel
-}
+import { useAppSelector } from '../../../store/hooks';
+import { UserInfoModel } from '../../../store/reducers/userReducer';
 
 type OrderModel = {
   _id?: string;
   bigNum: number;
   smallNum: number;
-  status: "ordered" | "completed";
+  status: "ordered" | "received" | "closed" | "completed";
   creater?: UserInfoModel,
   createdTime: string;
   reservationTime: any;
@@ -44,18 +28,23 @@ type ResModel = {
 const { Option } = Select;
 
 function OrderDetail() {
+  const currentDate = dayjs().format('YYYY-MM-DD');
+  const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+  const userInfo = useAppSelector((state) => state.user.userInfo);
   const navigate = useNavigate()
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const routeId = searchParams.get('id');
-
   const [saveOrder, setSaveOrder] = useState<OrderModel>()
+
+  const maxPrice = userInfo?.userType === 'merchant' ? 1.8 : 3
+  const minPrice = userInfo?.userType === 'merchant' ? 1.2 : 2
 
   const onFinish = (values: OrderModel) => {
     service.POST('/api/saveOrder', {
       ...saveOrder,
       ...values,
-      reservationTime: values?.reservationTime.toISOString()
+      reservationTime: dayjs(values?.reservationTime).toISOString()
     }).then((res) => {
       message.success(res.msg)
       navigate(-1)
@@ -68,21 +57,42 @@ function OrderDetail() {
     service.GET(`/api/getOrderDetail?id=${routeId}`).then((res: ResModel) => {
       setSaveOrder({
         ...res.data,
-        reservationTime: dayjs(res.data.reservationTime)
+        reservationTime: dayjs(res.data.reservationTime).format('YYYY-MM-DD HH:mm:ss')
       })
     })
   }
 
-  const handleTimeChange = (time: Dayjs) => {
-    setSaveOrder((prevState) => {
-      if (!prevState) {
-        return prevState; // 处理 prevState 为 undefined 的情况
+  const handleProcess = (status: "ordered" | "received" | "closed" | "completed") => {
+    onFinish({ ...saveOrder, status } as OrderModel)
+  }
+
+  const btns = () => {
+    if (userInfo?.userType === 'admin') {
+      if (saveOrder?.status === 'ordered') {
+        return <>
+          <Button className={styles.btn} variant="solid" onClick={() => handleProcess('closed')}>拒绝</Button>
+          <Button className={styles.btn} color="primary" variant="solid" onClick={() => handleProcess('received')}>接单</Button>
+        </>
+      } else if (saveOrder?.status === 'received') {
+        return <>
+          <Button className={styles.btn} color="primary" variant="solid" onClick={() => handleProcess('completed')}>完成订单</Button>
+        </>
       }
-      return {
-        ...prevState,
-        reservationTime: time || null
-      };
-    });
+      return <></>
+    }
+    if (userInfo?.userType === 'person') {
+      if (saveOrder?.status === 'ordered') {
+        return <>
+          <Button className={styles.btn} variant="solid" onClick={() => navigate(-1)}>取消</Button>
+          <Button className={styles.btn} color="primary" variant="solid" htmlType="submit">保存</Button>
+        </>
+      } else if (saveOrder?.status === 'received') {
+        return <>
+          <Button className={styles.btn} color="primary" variant="solid" onClick={() => handleProcess('completed')}>完成订单</Button>
+        </>
+      }
+      return <></>
+    }
   }
 
   useEffect(() => {
@@ -119,18 +129,21 @@ function OrderDetail() {
           autoComplete="off"
           initialValues={saveOrder}
         >
+          <div className={styles.help}>单价:大杯{maxPrice}元/杯，小杯{minPrice}元/杯。货值总和需大于20杯。</div>
           <Form.Item<OrderModel>
             label="大杯："
             name="bigNum"
+            tooltip={maxPrice + "元/杯"}
           >
-            <InputNumber min={0} addonAfter="杯" />
+            <InputNumber min={0} addonAfter="杯" disabled={userInfo?.userType === 'admin' || saveOrder?.status !== 'ordered'} />
           </Form.Item>
 
           <Form.Item<OrderModel>
             label="小杯："
             name="smallNum"
+            tooltip={minPrice + "元/杯"}
           >
-            <InputNumber min={0} addonAfter="杯" />
+            <InputNumber min={0} addonAfter="杯" disabled={userInfo?.userType === 'admin' || saveOrder?.status !== 'ordered'} />
           </Form.Item>
 
           <Form.Item<OrderModel>
@@ -150,20 +163,22 @@ function OrderDetail() {
             label="预约配送时间："
             name="reservationTime"
           >
-            <TimePicker
+            <Select
               placeholder="请选择"
-              format={'HH:mm'}
-              onChange={handleTimeChange}
-            />
+              disabled={saveOrder?.status !== 'ordered'}
+              allowClear
+            >
+              <Option value={currentDate + " 05:00:00"}>今天5:00</Option>
+              <Option value={currentDate + " 12:00:00"}>今天12:00</Option>
+              <Option value={currentDate + " 18:00:00"}>今天18:00</Option>
+              <Option value={tomorrow + " 05:00:00"}>明天5:00</Option>
+              <Option value={tomorrow + " 12:00:00"}>明天12:00</Option>
+              <Option value={tomorrow + " 18:00:00"}>明天18:00</Option>
+            </Select>
           </Form.Item>
 
           <Form.Item>
-            <Button className={styles.btn} onClick={() => navigate(-1)}>
-              取消
-            </Button>
-            <Button className={styles.btn} color="primary" variant="outlined" htmlType="submit">
-              保存
-            </Button>
+            {btns()}
           </Form.Item>
         </Form>)
       }

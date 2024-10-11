@@ -23,6 +23,7 @@
   .orderItem {
     padding: 12px;
     background-color: #fff;
+    color: #666666;
     margin-bottom: 12px;
     border-radius: 4px;
     position: relative;
@@ -32,10 +33,15 @@
     right: 12px;
     top: 12px;
     font-weight: 600;
-
   }
   .ordered {
+    color: #333333;
+  }
+  .received {
     color: #1677ff;
+  }
+  .closed {
+    color: #ff4d4f;
   }
   .completed {
     color: #52c41a;

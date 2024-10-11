@@ -1,6 +1,12 @@
 #root {
   margin: 0;
   padding: 0;
+  :where(.css-dev-only-do-not-override-14qglws) {
+    // 通用样式，适用于所有子元素
+    * {
+      font-size: 12px; // 修改字体大小
+    }
+  }
 }
 
 body {

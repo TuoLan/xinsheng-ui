@@ -22,6 +22,12 @@ function Home() {
         <div onClick={() => navigate('mine')}>个人中心</div>
       ),
     },
+    {
+      key: 'logout',
+      label: (
+        <div onClick={() => { localStorage.removeItem('token'); navigate('/login') }}>退出登陆</div>
+      ),
+    },
   ]
 
   return (
@@ -31,7 +37,7 @@ function Home() {
         <div className={styles.header}>
           <div className={styles.title}>鑫盛冷饮</div>
           <Dropdown menu={{ items }} placement="bottomLeft">
-            <UnorderedListOutlined />
+              <UnorderedListOutlined className={styles.ops} />
           </Dropdown>
         </div>
       }
