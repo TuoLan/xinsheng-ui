@@ -16,9 +16,9 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    service.POST('/api/login', values).then((res) => {
+    service.POST('/login', values).then((res) => {
       localStorage.setItem("token", res.data);
-      service.GET('/api/userInfo').then((res: { code: string; msg: string; data: UserInfoModel }) => {
+      service.GET('/userInfo').then((res: { code: string; msg: string; data: UserInfoModel }) => {
         const datas = {
           ...res.data,
           address: res.data.address || {

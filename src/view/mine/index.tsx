@@ -11,7 +11,7 @@ function Mine() {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [saveData, setSaveData] = useState<UserInfoModel>()
   const onFinish = (datas: UserInfoModel) => {
-    service.POST('/api/updateUserInfo', {
+    service.POST('/updateUserInfo', {
       ...datas
     }).then((res) => {
       message.success(res.msg)

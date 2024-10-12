@@ -12,7 +12,7 @@ type FieldType = {
 function Register() {
   const navigate = useNavigate()
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    service.POST('/api/register', values).then(() => {
+    service.POST('/register', values).then(() => {
       navigate('/login')
     })
   };

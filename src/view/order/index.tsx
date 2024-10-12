@@ -58,7 +58,7 @@ function Order() {
   )
 
   const init = async (status?: string) => {
-    const url = !!status ? `/api/getOrderList?status=${status}` : '/api/getOrderList'
+    const url = !!status ? `/getOrderList?status=${status}` : '/getOrderList'
     const orderListResp: ResModel = await service.GET(url)
     setOrderList(orderListResp.data)
   }

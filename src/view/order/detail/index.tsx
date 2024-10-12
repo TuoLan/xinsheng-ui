@@ -41,7 +41,7 @@ function OrderDetail() {
   const minPrice = userInfo?.userType === 'merchant' ? 1.2 : 2
 
   const onFinish = (values: OrderModel) => {
-    service.POST('/api/saveOrder', {
+    service.POST('/saveOrder', {
       ...saveOrder,
       ...values,
       reservationTime: dayjs(values?.reservationTime).toISOString()
@@ -54,7 +54,7 @@ function OrderDetail() {
   const onFinishFailed = () => { }
 
   const init = () => {
-    service.GET(`/api/getOrderDetail?id=${routeId}`).then((res: ResModel) => {
+    service.GET(`/getOrderDetail?id=${routeId}`).then((res: ResModel) => {
       setSaveOrder({
         ...res.data,
         reservationTime: dayjs(res.data.reservationTime).format('YYYY-MM-DD HH:mm:ss')
