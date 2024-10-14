@@ -16,7 +16,7 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    service.POST('/login', values).then((res) => {
+    service.POST('/login', { ...values, phoneNumber: values.username }).then((res) => {
       localStorage.setItem("token", res.data);
       service.GET('/userInfo').then((res: { code: string; msg: string; data: UserInfoModel }) => {
         const datas = {
@@ -54,11 +54,11 @@ function Login() {
         autoComplete="off"
       >
         <Form.Item<FieldType>
-          label="用户名："
+          label="用户名/手机号："
           name="username"
-          rules={[{ required: true, message: '请输入用户名!' }]}
+          rules={[{ required: true, message: '请输入用户名/手机号!' }]}
         >
-          <Input placeholder='请输入手机号/邮箱' />
+          <Input placeholder='请输入用户名/手机号' />
         </Form.Item>
 
         <Form.Item<FieldType>

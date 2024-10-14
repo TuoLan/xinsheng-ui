@@ -32,6 +32,11 @@ const statusMap = {
   completed: "已完成"
 }
 
+const userTypeMap: any = {
+  person: '个人订单',
+  merchant: '商家订单'
+}
+
 const paymentTypeMap = {
   hdfk: "货到付款"
 }
@@ -81,7 +86,11 @@ function Order() {
           orderList.map(item => {
             return (
               <div className={styles.orderItem} key={item._id} onClick={() => handelGoEdit(item._id)}>
-                <div className={`${styles.status} ${styles[item.status || 'all']}`}>{statusMap[item.status || "all"]}</div>
+                <div className={`${styles.status} ${styles[item.status || 'all']}`}>{
+                  userInfo?.userType === 'admin' ?
+                    userTypeMap[item.creater.userType] + '-' + statusMap[item.status || "all"] :
+                    statusMap[item.status || "all"]
+                }</div>
                 <div>大杯：{item.bigNum}杯</div>
                 <div>小杯：{item.smallNum}杯</div>
                 <div>付款方式：{paymentTypeMap[item.paymentType]}</div>

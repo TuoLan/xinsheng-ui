@@ -80,7 +80,7 @@ function OrderDetail() {
       }
       return <></>
     }
-    if (userInfo?.userType === 'person') {
+    if (userInfo?.userType === 'person' || userInfo?.userType === 'merchant') {
       if (saveOrder?.status === 'ordered') {
         return <>
           <Button className={styles.btn} variant="solid" onClick={() => navigate(-1)}>取消</Button>
