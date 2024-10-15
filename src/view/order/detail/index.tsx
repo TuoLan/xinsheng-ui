@@ -1,5 +1,5 @@
 import styles from "./index.module.scss"
-import { Button, Form, InputNumber, Select, message } from 'antd';
+import { Button, Form, Input, InputNumber, Select, message } from 'antd';
 import dayjs from 'dayjs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
@@ -7,6 +7,8 @@ import service from "../../../request"
 import { LeftOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../../store/hooks';
 import { UserInfoModel } from '../../../store/reducers/userReducer';
+
+const { TextArea } = Input
 
 type OrderModel = {
   _id?: string;
@@ -16,7 +18,9 @@ type OrderModel = {
   creater?: UserInfoModel,
   createdTime: string;
   reservationTime: any;
-  paymentType: "hdfk"
+  paymentType: "hdfk",
+  details?: string,
+  reasonDetail?: string
 }
 
 type ResModel = {
@@ -54,12 +58,19 @@ function OrderDetail() {
   const onFinishFailed = () => { }
 
   const init = () => {
-    service.GET(`/getOrderDetail?id=${routeId}`).then((res: ResModel) => {
+    service.GET('/getOrderDetail', { id: routeId }).then((res: ResModel) => {
       setSaveOrder({
         ...res.data,
         reservationTime: dayjs(res.data.reservationTime).format('YYYY-MM-DD HH:mm:ss')
       })
     })
+  }
+
+  const handleReasonInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSaveOrder(prevState => ({
+      ...prevState,
+      reasonDetail: event.target.value
+    }) as OrderModel)
   }
 
   const handleProcess = (status: "ordered" | "received" | "closed" | "completed") => {
@@ -79,8 +90,7 @@ function OrderDetail() {
         </>
       }
       return <></>
-    }
-    if (userInfo?.userType === 'person' || userInfo?.userType === 'merchant') {
+    } else {
       if (saveOrder?.status === 'ordered') {
         return <>
           <Button className={styles.btn} variant="solid" onClick={() => navigate(-1)}>取消</Button>
@@ -130,18 +140,27 @@ function OrderDetail() {
           initialValues={saveOrder}
         >
           <div className={styles.help}>单价:大杯{maxPrice}元/杯，小杯{minPrice}元/杯。货值总和需大于20杯。</div>
+          {
+            saveOrder.creater ?
+              <>
+                <div className={styles.help}>下单人/商家：{saveOrder.creater.nickname}</div>
+                <div className={styles.help}>联系方式：<a href={`tel:${saveOrder.creater.phoneNumber}`}>{saveOrder.creater.phoneNumber}</a></div>
+                <div className={styles.help}>收货地址：{`${saveOrder.creater.address.province} ${saveOrder.creater.address.city} ${saveOrder.creater.address.area} ${saveOrder.creater.address.detail}`}</div>
+                <div className={styles.help}>联系供应商：<a href='tel:19972952816'>19972952816</a></div>
+              </> : <></>
+          }
           <Form.Item<OrderModel>
-            label="大杯："
-            name="bigNum"
-            tooltip={maxPrice + "元/杯"}
+            label="小杯："
+            name="smallNum"
+            tooltip={minPrice + "元/杯"}
           >
             <InputNumber min={0} addonAfter="杯" disabled={userInfo?.userType === 'admin' || saveOrder?.status !== 'ordered'} />
           </Form.Item>
 
           <Form.Item<OrderModel>
-            label="小杯："
-            name="smallNum"
-            tooltip={minPrice + "元/杯"}
+            label="大杯："
+            name="bigNum"
+            tooltip={maxPrice + "元/杯"}
           >
             <InputNumber min={0} addonAfter="杯" disabled={userInfo?.userType === 'admin' || saveOrder?.status !== 'ordered'} />
           </Form.Item>
@@ -165,7 +184,7 @@ function OrderDetail() {
           >
             <Select
               placeholder="请选择"
-              disabled={saveOrder?.status !== 'ordered'}
+              disabled={userInfo?.userType === "admin" || saveOrder?.status !== 'ordered'}
               allowClear
             >
               <Option value={currentDate + " 05:00:00"}>今天5:00</Option>
@@ -176,6 +195,29 @@ function OrderDetail() {
               <Option value={tomorrow + " 18:00:00"}>明天18:00</Option>
             </Select>
           </Form.Item>
+
+          <Form.Item<OrderModel>
+            label="备注："
+            name="details"
+          >
+            <TextArea rows={3} placeholder="请输入" maxLength={50} disabled={userInfo?.userType === "admin" || saveOrder.status !== "ordered"} />
+          </Form.Item>
+
+          {
+            userInfo?.userType === "admin" ?
+              <Form.Item<OrderModel>
+                label="供应商回复："
+                name="reasonDetail"
+              >
+                <TextArea rows={3} placeholder="请输入" maxLength={50} onInput={handleReasonInput} />
+              </Form.Item> : saveOrder.status !== "ordered" && saveOrder.reasonDetail ?
+                <Form.Item<OrderModel>
+                  label="供应商回复："
+                  name="reasonDetail"
+                >
+                  <TextArea rows={3} placeholder="请输入" maxLength={50} onInput={handleReasonInput} disabled />
+                </Form.Item> : <></>
+          }
 
           <Form.Item>
             {btns()}

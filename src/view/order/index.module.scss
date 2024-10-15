@@ -1,4 +1,5 @@
 .order {
+  height: 100%;
   .ops {
     margin-top: 8px;
     background-color: #fff;
@@ -17,7 +18,7 @@
   }
   .orderLayout {
     padding: 12px;
-    height: calc(100vh - 200px);
+    height: calc(100% - 154px);
     overflow-y: auto;
   }
   .orderItem {

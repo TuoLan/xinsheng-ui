@@ -57,12 +57,18 @@ service.interceptors.response.use(
   }
 );
 
+// 修改 GET 方法，使它可以传递对象参数
 const GET = <T = any, R = T, D = any>(
   url: string,
+  params?: D | undefined, // 将参数作为对象传递
   config?: (AxiosRequestConfig<D> & { cache?: boolean }) | undefined,
 ): Promise<R> => {
-  return service.get<T, R, D>(url, config);
+  return service.get<T, R, D>(url, {
+    ...config,
+    params, // 将对象参数附加到请求中
+  });
 };
+
 const POST = <T = any, R = T, D = any>(
   url: string,
   data?: D | undefined,

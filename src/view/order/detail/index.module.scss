@@ -1,5 +1,5 @@
 .otherDetail {
-  height: 100vh;
+  height: 100%;
   .header {
     padding: 12px;
     height: 28px;
@@ -17,6 +17,8 @@
     align-items: center;
   }
   .orderForm {
+    height: calc(100% - 76px);
+    overflow-y: auto;
     margin: 12px;
     padding: 12px;
     background-color: #fff;
