@@ -16,10 +16,25 @@
       margin-left: 8px;
     }
   }
+  .options {
+    margin-top: 6px;
+    width: 18px;
+    height: 18px;
+    font-size: 18px !important; // 设置外层元素的字体大小
+    display: inline-flex; // 确保图标正常显示
+    align-items: center; // 垂直居中
+    *{
+      width: 100%;
+      height: 100%;
+    }
+  }
   .orderLayout {
     padding: 12px;
     height: calc(100% - 154px);
     overflow-y: auto;
+  }
+  .bigorderLayout {
+    height: calc(100% - 104px);
   }
   .orderItem {
     padding: 12px;

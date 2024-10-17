@@ -1,11 +1,14 @@
 import styles from "./index.module.scss"
-import { Button, Form, Input, message, Collapse } from 'antd';
+import { Button, Form, Input, message, Collapse, Dropdown, MenuProps } from 'antd';
+import { UnorderedListOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import service from "../../request"
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { setUserInfo, UserInfoModel } from '../../store/reducers/userReducer';
 
 function Mine() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((state) => state.user.userInfo) as UserInfoModel
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -20,6 +23,21 @@ function Mine() {
     })
   }
   const onFinishFailed = () => { }
+
+  const optItems: MenuProps['items'] = [
+    {
+      key: 'order',
+      label: (
+        <div onClick={() => navigate('/index/order')}>订单</div>
+      ),
+    },
+    {
+      key: 'logout',
+      label: (
+        <div onClick={() => { localStorage.removeItem('token'); navigate('/login') }}>退出登陆</div>
+      ),
+    },
+  ]
 
   const items = [
     {
@@ -49,7 +67,12 @@ function Mine() {
   }, []);
 
   return (
-    <div className={styles.mine}>
+    <div className={`${styles.mine} ${window.localStorage.getItem('isHeader') === 'false' && styles.bigmine}`}>
+      {window.localStorage.getItem('isHeader') === 'false' && <Dropdown menu={{ items: optItems }} placement="bottomLeft">
+        <span className={styles.options}>
+          <UnorderedListOutlined />
+        </span>
+      </Dropdown>}
       {saveData && (
         <Form
           className={styles.basicForm}

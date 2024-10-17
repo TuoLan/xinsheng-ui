@@ -33,9 +33,9 @@ function Home() {
   return (
     <div className={styles.home}>
       {
-        location.pathname !== "/index/orderDetail" &&
+        location.pathname !== "/index/orderDetail" && window.localStorage.getItem('isHeader') === 'true' &&
         <div className={styles.header}>
-          <div className={styles.title}>鑫盛冷饮</div>
+            <div className={styles.title}>鑫盛冷饮</div>
           <Dropdown menu={{ items }} placement="bottomLeft">
               <UnorderedListOutlined className={styles.ops} />
           </Dropdown>

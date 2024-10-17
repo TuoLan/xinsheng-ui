@@ -1,5 +1,6 @@
 import styles from "./index.module.scss"
-import { Button, Tabs, Empty } from 'antd';
+import { Button, Tabs, Empty, Dropdown, MenuProps } from 'antd';
+import { UnorderedListOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react";
 import service from "../../request"
@@ -56,6 +57,27 @@ function Order() {
   const scrollableRef = useRef<HTMLDivElement | null>(null); // 引用 DOM 元素
   const userInfo = useAppSelector((state) => state.user.userInfo);
 
+  const items: MenuProps['items'] = [
+    ...(userInfo?.userType !== 'admin' ? [{
+      key: 'addorder',
+      label: (
+        <div onClick={() => navigate('/index/orderDetail?id=undefined')}>新建订单</div>
+      ),
+    }] : []),
+    {
+      key: 'mine',
+      label: (
+        <div onClick={() => navigate('/index/mine')}>个人中心</div>
+      ),
+    },
+    {
+      key: 'logout',
+      label: (
+        <div onClick={() => { localStorage.removeItem('token'); navigate('/login') }}>退出登陆</div>
+      ),
+    },
+  ]
+
   // 处理新建订单
   const handelGoEdit = (id?: string) => {
     navigate(`/index/orderDetail?id=${id}`);
@@ -77,6 +99,13 @@ function Order() {
       新建订单
     </Button>
   );
+
+  const options = window.localStorage.getItem('isHeader') === 'false' ?
+    (<Dropdown menu={{ items }} placement="bottomLeft">
+      <span className={styles.options}>
+        <UnorderedListOutlined />
+      </span>
+    </Dropdown>) : btn
 
   // 初始化加载订单数据
   const init = async (page: number, pageSize: number, status?: string): Promise<OrderModel[]> => {
@@ -135,15 +164,15 @@ function Order() {
   return (
     <div className={styles.order}>
       <div className={styles.ops}>
-        <Tabs defaultActiveKey="all" className={styles.orderTabs} tabBarExtraContent={btn} size="small" items={[
+        <Tabs defaultActiveKey="all" className={styles.orderTabs} tabBarExtraContent={options} size="small" items={[
           { label: '全部', key: 'all' },
           { label: '已下单', key: 'ordered' },
           { label: '已接单', key: 'received' },
-          { label: '已关闭', key: 'closed ' },
+          { label: '已关闭', key: 'closed' },
           { label: '已完成', key: 'completed' }
         ]} onChange={handleTabChange} />
       </div>
-      <div className={styles.orderLayout} ref={scrollableRef}>
+      <div className={`${styles.orderLayout} ${window.localStorage.getItem('isHeader') === 'false' && styles.bigorderLayout}`} ref={scrollableRef}>
         {
           orderList.length ?
             orderList.map(item => (

@@ -48,7 +48,7 @@ service.interceptors.response.use(
   },
   (error: any) => {
     if (error.status === 401) {
-      window.location.href = '/login'; // 重定向到登录页面
+      window.location.href = `${window.location.origin}/login`
       return Promise.reject(new Error(error.response.data.msg || 'Error'));
     }
     // 处理响应错误

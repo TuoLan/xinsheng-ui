@@ -1,4 +1,5 @@
 .mine {
+  position: relative;
   display: flex;
   background-color: #fff;
   margin: 12px;
@@ -9,4 +10,23 @@
   .btn {
     margin: 8px 0;
   }
+  .options {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+    margin-top: 6px;
+    width: 18px;
+    height: 18px;
+    font-size: 18px !important; // 设置外层元素的字体大小
+    display: inline-flex; // 确保图标正常显示
+    align-items: center; // 垂直居中
+    *{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.bigmine {
+  height: calc(100% - 50px);
 }

@@ -123,7 +123,7 @@ function OrderDetail() {
   return (
     <div className={styles.otherDetail}>
       <div className={styles.header}>
-        <div className={styles.back} onClick={() => navigate(-1)} ><LeftOutlined /></div>
+        <div className={styles.back} onClick={() => navigate(-1)} ><LeftOutlined className={styles.back} /></div>
         <div className={styles.title}>订单管理</div>
       </div>
       {
