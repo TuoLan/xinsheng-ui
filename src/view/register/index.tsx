@@ -4,6 +4,7 @@ import { Button, Form, Input, message } from 'antd';
 import styles from "./index.module.scss"
 import { useNavigate } from 'react-router-dom';
 import service from "../../request"
+import Header from '@/components/header'
 
 type FieldType = {
   username?: string;
@@ -61,9 +62,7 @@ function Register() {
 
   return (
     <div className={styles.register}>
-      <div className={styles.header}>
-        <div className={styles.title}>鑫盛冷饮</div>
-      </div>
+      <Header isBack={false} title="注册" />
       <Form
         className={styles.basicForm}
         name="basic"

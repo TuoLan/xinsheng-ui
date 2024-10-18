@@ -4,20 +4,8 @@ import { UnorderedListOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react";
 import service from "../../request"
-import dayjs from 'dayjs';
 import { useAppSelector } from '../../store/hooks';
-import { UserInfoModel } from '../../store/reducers/userReducer';
-
-type OrderModel = {
-  _id: string;
-  bigNum?: number;
-  smallNum?: number;
-  status: "all" | "ordered" | "received" | "closed" | "completed";
-  creater: UserInfoModel,
-  createdTime: any;
-  reservationTime: any;
-  paymentType: "hdfk"
-}
+import OrderItem, { OrderModel } from './order-item'
 
 type PaginateModel = {
   data: OrderModel[],
@@ -28,23 +16,6 @@ type ResModel = {
   code: string;
   data: PaginateModel;
   msg: string
-}
-
-const statusMap = {
-  all: "全部",
-  ordered: "已下单",
-  received: "已接单",
-  closed: "已关闭",
-  completed: "已完成"
-}
-
-const userTypeMap: any = {
-  person: '个人订单',
-  merchant: '商家订单'
-}
-
-const paymentTypeMap = {
-  hdfk: "货到付款"
 }
 
 function Order() {
@@ -176,21 +147,7 @@ function Order() {
         {
           orderList.length ?
             orderList.map(item => (
-              <div className={styles.orderItem} key={item._id} onClick={() => handelGoEdit(item._id)}>
-                <div className={`${styles.status} ${styles[item.status || 'all']}`}>
-                  {userInfo?.userType === 'admin' ?
-                    userTypeMap[item.creater.userType] + '-' + statusMap[item.status || "all"] :
-                    statusMap[item.status || "all"]}
-                </div>
-                <div>小杯：{item.smallNum}杯</div>
-                <div>大杯：{item.bigNum}杯</div>
-                <div>付款方式：{paymentTypeMap[item.paymentType]}</div>
-                <div>下单人/商家：{item.creater.nickname}</div>
-                <div>联系方式：<a href={`tel:${item.creater.phoneNumber}`}>{item.creater.phoneNumber}</a></div>
-                <div>预约配送时间：{dayjs(item.reservationTime).format('MM月DD日 HH:mm')}</div>
-                {/* <div>下单时间：{dayjs(item.createdTime).format('YYYY年MM月DD日 HH:mm:ss')}</div> */}
-                <div>收货地址：{`${item.creater.address.province} ${item.creater.address.city} ${item.creater.address.area} ${item.creater.address.detail}`}</div>
-              </div>
+              <OrderItem key={item._id} item={item} userInfo={userInfo} handelGoEdit={handelGoEdit} />
             )) :
             <Empty />
         }

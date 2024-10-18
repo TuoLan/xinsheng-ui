@@ -3,10 +3,10 @@ import { Button, Form, Input, InputNumber, Select, message } from 'antd';
 import dayjs from 'dayjs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import service from "../../../request"
-import { LeftOutlined } from '@ant-design/icons';
-import { useAppSelector } from '../../../store/hooks';
-import { UserInfoModel } from '../../../store/reducers/userReducer';
+import service from "@/request"
+import { useAppSelector } from '@/store/hooks';
+import { UserInfoModel } from '@/store/reducers/userReducer';
+import Header from '@/components/header'
 
 const { TextArea } = Input
 
@@ -122,10 +122,7 @@ function OrderDetail() {
   }, []);
   return (
     <div className={styles.otherDetail}>
-      <div className={styles.header}>
-        <div className={styles.back} onClick={() => navigate(-1)} ><LeftOutlined className={styles.back} /></div>
-        <div className={styles.title}>订单管理</div>
-      </div>
+      <Header isBack={true} title="订单管理" />
       {
         saveOrder &&
         (<Form

@@ -1,21 +1,5 @@
 .otherDetail {
   height: 100%;
-  .header {
-    padding: 12px;
-    height: 28px;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .title {
-    flex: 1;
-    display: flex;
-    font-size: 16px;
-    font-weight: 600;
-    justify-content: center;
-    align-items: center;
-  }
   .orderForm {
     height: calc(100% - 76px);
     overflow-y: auto;
@@ -29,11 +13,5 @@
   }
   .btn {
     margin-right: 8px;
-  }
-  .back {
-    font-size: 18px;
-    position: absolute;
-    left: 6px;
-    top: 9px;
   }
 }

@@ -4,7 +4,8 @@ import Order from '../order';
 import Mine from '../mine';
 import OrderDetail from '../order/detail';
 import { Dropdown, MenuProps } from 'antd';
-import { UnorderedListOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
+import Header from '@/components/header'
 
 function Home() {
   const navigate = useNavigate()
@@ -34,12 +35,11 @@ function Home() {
     <div className={styles.home}>
       {
         location.pathname !== "/index/orderDetail" && window.localStorage.getItem('isHeader') === 'true' &&
-        <div className={styles.header}>
-            <div className={styles.title}>鑫盛冷饮</div>
+        <Header isBack={false} title="鑫盛冷饮">
           <Dropdown menu={{ items }} placement="bottomLeft">
-              <UnorderedListOutlined className={styles.ops} />
+              <MenuOutlined className={styles.ops} />
           </Dropdown>
-        </div>
+          </Header>
       }
       <Routes>
         <Route path="/" element={<Navigate to="order" replace />} />

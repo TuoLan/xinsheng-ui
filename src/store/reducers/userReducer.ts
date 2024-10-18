@@ -15,7 +15,8 @@ export type UserInfoModel = {
   createTime: string;
   nickname: string;
   phoneNumber: string;
-  address: AddressModel
+  address: AddressModel;
+  businessLicense?: string
 }
 
 interface UserState {

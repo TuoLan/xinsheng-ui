@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import service from "../../request"
 import { useAppDispatch } from '../../store/hooks';
 import { setUserInfo, UserInfoModel } from '../../store/reducers/userReducer';
+import Header from '@/components/header'
 
 type FieldType = {
   username?: string;
@@ -39,9 +40,7 @@ function Login() {
   };
   return (
     <div className={styles.login}>
-      <div className={styles.header}>
-        <div className={styles.title}>鑫盛冷饮</div>
-      </div>
+      <Header isBack={false} title="鑫盛冷饮" />
       <Form
         className={styles.basicForm}
         name="basic"
